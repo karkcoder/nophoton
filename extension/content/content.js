@@ -96,6 +96,16 @@
   // Auto-restore state on page load
   const key = `darkMode_${location.origin}`;
   chrome.storage.local.get([key], (result) => {
-    if (result[key]) applyDark();
+    // If explicitly enabled in storage, apply dark mode
+    if (result[key]) {
+      applyDark();
+    } else if (!(key in result)) {
+      // If not in storage, check the detected theme
+      // If uncertain, default to enabling dark mode
+      const theme = detectPageTheme();
+      if (theme === "unknown") {
+        applyDark();
+      }
+    }
   });
 })();
