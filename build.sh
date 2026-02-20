@@ -45,10 +45,31 @@ rm -f "$OUTPUT"
 # Build from inside dist/ so paths inside the zip are clean
 (cd "$DIST_DIR" && zip -r "$OUTPUT" . --exclude "*.DS_Store" --exclude "__MACOSX/*")
 
+# ── 6. Create CRX (signed extension package) ────────────────────────────────
+echo "--> Creating CRX file..."
+KEY_FILE="$SCRIPT_DIR/nophoton.pem"
+CRX_OUTPUT="$ARTIFACTS_DIR/nophoton.crx"
+
+if [ ! -f "$KEY_FILE" ]; then
+  echo "ERROR: Private key not found at $KEY_FILE" >&2
+  echo "       Generate it with: openssl genrsa 2048 > nophoton.pem" >&2
+  exit 1
+fi
+
+# Use crx3 from npm or fall back to manual method
+if command -v crx3 &> /dev/null; then
+  crx3 "$DIST_DIR" -o "$CRX_OUTPUT" -p "$KEY_FILE"
+else
+  echo "WARNING: crx3 not found. Install with: npm install -g crx3" >&2
+  echo "         CRX file will not be created." >&2
+  CRX_OUTPUT="(skipped)"
+fi
+
 echo ""
 echo "==> Build complete!"
 echo "    Unpacked : $DIST_DIR"
 echo "    Zip      : $OUTPUT"
+echo "    CRX      : $CRX_OUTPUT"
 echo ""
 echo "Load unpacked in Chrome/Brave:"
 echo "  1. Open chrome://extensions"

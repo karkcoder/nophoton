@@ -30,3 +30,6 @@ nophoton.zip
 *.zip
 *.crx
 *.xpi
+
+# Private keys
+*.pem
