@@ -16,8 +16,8 @@ except ImportError:
 
 SIZES = [16, 48, 128]
 BG_COLOR    = (0, 0, 0, 255)          # black
-TEXT_COLOR  = (255, 255, 255, 255)    # white
-ACCENT      = (77, 255, 145, 255)     # green accent
+TEXT_COLOR  = (255, 0, 0, 255)        # red text (FF0000)
+ACCENT      = (139, 0, 0, 255)        # red accent (8B0000)
 
 
 def make_icon(size: int, out_dir: str):
@@ -33,18 +33,18 @@ def make_icon(size: int, out_dir: str):
         width=border,
     )
 
-    # Letter "N" centred
-    font_size = int(size * 0.55)
+    # Text "NP" centred
+    font_size = int(size * 0.40)
     try:
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
     except (IOError, OSError):
         font = ImageFont.load_default()
 
-    bbox = draw.textbbox((0, 0), "N", font=font)
+    bbox = draw.textbbox((0, 0), "NP", font=font)
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x = (size - tw) // 2 - bbox[0]
     y = (size - th) // 2 - bbox[1]
-    draw.text((x, y), "N", font=font, fill=TEXT_COLOR)
+    draw.text((x, y), "NP", font=font, fill=TEXT_COLOR)
 
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, f"icon{size}.png")
