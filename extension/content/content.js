@@ -93,19 +93,42 @@
     return detectPageTheme();
   };
 
-  // Auto-restore state on page load
-  const key = `darkMode_${location.origin}`;
-  chrome.storage.local.get([key], (result) => {
-    // If explicitly enabled in storage, apply dark mode
-    if (result[key]) {
-      applyDark();
-    } else if (!(key in result)) {
-      // If not in storage, check the detected theme
-      // If uncertain, default to enabling dark mode
+  window.__nophotonSetIgnoreIfDark = (ignore) => {
+    if (ignore) {
+      // If page is already dark, remove NoPhoton's dark overlay
       const theme = detectPageTheme();
-      if (theme === "unknown") {
-        applyDark();
+      if (theme === "dark") {
+        removeDark();
       }
+    } else {
+      // Checkbox unchecked: re-run auto-detection
+      applyAutoDetectedDarkMode();
+    }
+  };
+
+  function applyAutoDetectedDarkMode() {
+    const theme = detectPageTheme();
+    if (theme === "unknown") {
+      applyDark();
+    }
+  }
+
+  // Auto-restore state on page load
+  const darkModeKey = `darkMode_${location.origin}`;
+  const ignoreIfDarkKey = `ignoreIfDark_${location.origin}`;
+
+  chrome.storage.local.get([darkModeKey, ignoreIfDarkKey], (result) => {
+    const isDarkModeOn = !!result[darkModeKey];
+    const shouldIgnore = !!result[ignoreIfDarkKey];
+
+    if (isDarkModeOn) {
+      // If "Ignore if dark" is on and page is already dark, don't double-apply
+      if (shouldIgnore && detectPageTheme() === "dark") {
+        return;
+      }
+      applyDark();
+    } else if (!(darkModeKey in result) && !shouldIgnore) {
+      applyAutoDetectedDarkMode();
     }
   });
 })();

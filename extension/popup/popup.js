@@ -1,4 +1,5 @@
 const toggle = document.getElementById("darkToggle");
+const ignoreIfDark = document.getElementById("ignoreIfDark");
 const statusText = document.getElementById("statusText");
 const pageTheme = document.getElementById("pageTheme");
 
@@ -29,10 +30,15 @@ function detectPageTheme(tab) {
 
 // Load persisted state for the current tab's origin
 chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-  const key = `darkMode_${new URL(tab.url).origin}`;
-  chrome.storage.local.get([key], (result) => {
-    const isOn = !!result[key];
+  const origin = new URL(tab.url).origin;
+  const darkModeKey = `darkMode_${origin}`;
+  const ignoreIfDarkKey = `ignoreIfDark_${origin}`;
+
+  chrome.storage.local.get([darkModeKey, ignoreIfDarkKey], (result) => {
+    const isOn = !!result[darkModeKey];
+    const shouldIgnore = !!result[ignoreIfDarkKey];
     toggle.checked = isOn;
+    ignoreIfDark.checked = shouldIgnore;
     setLabel(isOn);
   });
   detectPageTheme(tab);
@@ -53,6 +59,24 @@ toggle.addEventListener("change", () => {
         window.__nophotonSetDark(enabled);
       },
       args: [isOn],
+    });
+  });
+});
+
+// Handle "Ignore if dark" checkbox
+ignoreIfDark.addEventListener("change", () => {
+  const shouldIgnore = ignoreIfDark.checked;
+
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    const key = `ignoreIfDark_${new URL(tab.url).origin}`;
+    chrome.storage.local.set({ [key]: shouldIgnore });
+
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (ignore) => {
+        window.__nophotonSetIgnoreIfDark(ignore);
+      },
+      args: [shouldIgnore],
     });
   });
 });

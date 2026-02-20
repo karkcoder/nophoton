@@ -94,6 +94,27 @@
       input:checked + .slider::before {
         transform: translateX(28px);
       }
+
+      /* Checkbox styling */
+      .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .checkbox-wrapper input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: #ff0000;
+      }
+
+      .checkbox-wrapper label {
+        font-size: 12px;
+        color: #aaa;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -109,6 +130,11 @@
     <p class="status-label">
       Dark Mode: <span id="statusText" class="off">OFF</span>
     </p>
+
+    <div class="checkbox-wrapper">
+      <input type="checkbox" id="ignoreIfDark" />
+      <label for="ignoreIfDark">Ignore if dark</label>
+    </div>
 
     <p
       class="status-label"
