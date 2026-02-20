@@ -29,9 +29,17 @@ rsync -a --delete \
   --exclude "*.DS_Store" --exclude "__MACOSX" \
   "$EXT_DIR/" "$DIST_DIR/"
 
-# ── 4. Package into a zip ──────────────────────────────────────────────────
+# ── 4. Copy unpacked extension to artifacts/ ──────────────────────────────
+echo "--> Copying unpacked extension to artifacts/..."
+ARTIFACTS_DIR="$SCRIPT_DIR/artifacts"
+UNPACKED_DIR="$ARTIFACTS_DIR/nophoton"
+mkdir -p "$ARTIFACTS_DIR"
+rm -rf "$UNPACKED_DIR"
+cp -r "$DIST_DIR" "$UNPACKED_DIR"
+
+# ── 5. Package into a zip ──────────────────────────────────────────────────
 echo "--> Creating zip archive..."
-OUTPUT="$SCRIPT_DIR/nophoton.zip"
+OUTPUT="$ARTIFACTS_DIR/nophoton.zip"
 rm -f "$OUTPUT"
 
 # Build from inside dist/ so paths inside the zip are clean

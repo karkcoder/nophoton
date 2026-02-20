@@ -8,7 +8,7 @@
     style.id = STYLE_ID;
     style.textContent = `
       html, body, * {
-        background-color: #000000 !important;
+        background-color: #1b1b1b !important;
         color: #ffffff !important;
         border-color: #444444 !important;
       }

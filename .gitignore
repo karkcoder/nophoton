@@ -1,6 +1,7 @@
 # Build output
 dist/
 build/
+artifacts/
 
 # Node
 node_modules/
