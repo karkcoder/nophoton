@@ -28,6 +28,30 @@ Drag the `.crx` onto the extensions page, or use the zip at `artifacts/nophoton.
 > The signed CRX requires `nophoton.pem` at repo root to rebuild.  
 > Generate a fresh key with: `openssl genrsa 2048 > nophoton.pem`
 
+## Prerequisites
+
+### crx3 (for signing CRX packages)
+
+Install the `crx3` CLI tool globally via npm:
+
+```bash
+npm install -g crx3
+```
+
+> Requires Node.js/npm to be installed. The build script will skip the CRX step and warn if `crx3` is not found.
+
+### Private key (for signing CRX packages)
+
+A `nophoton.pem` RSA private key must exist at the repo root before building a signed `.crx`. Generate one with:
+
+```bash
+openssl genrsa 2048 > nophoton.pem
+```
+
+> Keep this file secret — it is not committed to the repository. Losing it means you can no longer produce a CRX signed with the same extension identity.
+
+---
+
 ## Build
 
 ```bash
