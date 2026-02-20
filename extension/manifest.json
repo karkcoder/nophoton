@@ -3,7 +3,7 @@
   "name": "NoPhoton - Dark Mode Toggle",
   "description": "Toggle dark mode on any page: black background, white text.",
   "version": "1.0.0",
-  "permissions": ["activeTab", "scripting", "storage"],
+  "permissions": ["activeTab", "tabs", "scripting", "storage"],
   "action": {
     "default_popup": "popup/popup.html",
     "default_title": "NoPhoton Dark Mode"
